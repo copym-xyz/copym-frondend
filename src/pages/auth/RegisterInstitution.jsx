@@ -12,6 +12,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Building2, ArrowLeft } from 'lucide-react';
 import DocumentUpload from '../documents/DocumentUpload';
+import { Label } from '@/components/ui/label';
 
 const institutionSchema = z.object({
   name: z.string().min(1, 'Institution name is required'),
@@ -50,6 +51,8 @@ export const RegisterInstitution = () => {
     }
   });
 
+  const { isLoading } = registerMutation;
+
   const onSubmit = (data) => {
     registerMutation.mutate(data);
   };
@@ -61,7 +64,7 @@ export const RegisterInstitution = () => {
       <div className="relative z-10 w-full max-w-2xl">
         <Button 
           variant="ghost" 
-          className="absolute left-0 -top-16 text-white hover:text-purple-400"
+          className="absolute left-0 -top-16 text-white hover:text-blue-400"
           onClick={() => navigate('/')}
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -70,8 +73,8 @@ export const RegisterInstitution = () => {
 
         <Card className="w-full bg-slate-900/80 backdrop-blur-lg border-slate-800 p-8">
           <div className="text-center mb-8">
-            <div className="mb-6 p-3 bg-purple-500/10 rounded-full w-16 h-16 mx-auto flex items-center justify-center">
-              <Building2 className="w-8 h-8 text-purple-400" />
+            <div className="mb-6 p-3 bg-blue-500/10 rounded-full w-16 h-16 mx-auto flex items-center justify-center">
+              <Building2 className="w-8 h-8 text-blue-400" />
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">Register Institution</h1>
             <p className="text-slate-400">Complete the form below to register your organization</p>
@@ -79,47 +82,52 @@ export const RegisterInstitution = () => {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
+              <Label className="text-slate-200">Institution Name</Label>
               <Input 
                 {...register('name')} 
                 placeholder="Institution Name"
-                className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400"
+                className="mt-1 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500"
               />
               {errors.name && <p className="mt-1 text-sm text-red-400">{errors.name.message}</p>}
             </div>
 
             <div>
+              <Label className="text-slate-200">Registration Number</Label>
               <Input 
                 {...register('registrationNumber')} 
                 placeholder="Registration Number"
-                className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400"
+                className="mt-1 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500"
               />
               {errors.registrationNumber && <p className="mt-1 text-sm text-red-400">{errors.registrationNumber.message}</p>}
             </div>
 
             <div>
+              <Label className="text-slate-200">Email</Label>
               <Input 
                 {...register('email')} 
                 type="email" 
                 placeholder="Email"
-                className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400"
+                className="mt-1 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500"
               />
               {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>}
             </div>
 
             <div>
+              <Label className="text-slate-200">Phone</Label>
               <Input 
                 {...register('contactInfo.phone')} 
                 placeholder="Phone"
-                className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400"
+                className="mt-1 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500"
               />
               {errors.contactInfo?.phone && <p className="mt-1 text-sm text-red-400">{errors.contactInfo.phone.message}</p>}
             </div>
 
             <div>
+              <Label className="text-slate-200">Address</Label>
               <Textarea 
                 {...register('contactInfo.address')} 
                 placeholder="Address"
-                className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400 min-h-24"
+                className="mt-1 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 min-h-24"
               />
               {errors.contactInfo?.address && <p className="mt-1 text-sm text-red-400">{errors.contactInfo.address.message}</p>}
             </div>
@@ -128,10 +136,17 @@ export const RegisterInstitution = () => {
 
             <Button 
               type="submit" 
-              disabled={registerMutation.isLoading}
-              className="w-full bg-purple-600 hover:bg-purple-500 text-white"
+              disabled={isLoading} // Disable the button when isLoading is true
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white transition-colors"
             >
-              {registerMutation.isLoading ? 'Submitting...' : 'Submit Registration'}
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit Registration'
+              )}
             </Button>
           </form>
         </Card>
@@ -139,5 +154,3 @@ export const RegisterInstitution = () => {
     </div>
   );
 };
-
-export default RegisterInstitution;
