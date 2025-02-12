@@ -1,28 +1,35 @@
+// src/services/api.js
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL: 'http://localhost:5000/api', // Ensure this matches your backend port
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 });
 
+// Add request interceptor
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
+}, (error) => {
+  return Promise.reject(error);
 });
 
+// Add response interceptor for global error handling
 api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    console.error('API Error:', error.response); 
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+  (error) => {
+    console.error('API Error:', error.response?.data || error.message);
+    
+    // You can add more specific error handling here
+    if (error.response?.status === 404) {
+      console.error('Endpoint not found');
     }
+    
     return Promise.reject(error);
   }
 );

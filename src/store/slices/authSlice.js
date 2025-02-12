@@ -19,7 +19,7 @@ const authSlice = createSlice({
       state.user = user;
       state.token = token;
       state.isAuthenticated = true;
-      state.error = null;
+      state.authError = null;
       
       // Update localStorage
       localStorage.setItem('token', token);

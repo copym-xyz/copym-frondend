@@ -34,6 +34,7 @@ import NotFound from './Notfound/Notfound.jsx';
 import Unauthorized from './components/Unauthorized.jsx';
 import InstitutionsList from './pages/institution/InstitutionsList.jsx';
 import UsersList from './pages/user/UsersList.jsx';
+import AssetRegistrationForm from './components/assets/forms/AssetRegistrationForm.jsx';
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -78,6 +79,28 @@ const App = () => {
               </Layout>
             </PrivateRoute>
           } />
+
+
+          <Route
+            path="/institution-dashboard"
+            element={
+              <PrivateRoute allowedRoles={['institution_admin']}>
+                <Layout>
+                  <InstitutionDashboard />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/assets/register"
+            element={
+              <PrivateRoute allowedRoles={['institution_admin']}>
+                <Layout>
+                  <AssetRegistrationForm />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
 
           <Route path="/assets/validate" element={
             <PrivateRoute allowedRoles={['super_admin']}>
